@@ -1,0 +1,19 @@
+version: "1"
+kind: evaluation
+name: Telegraph Trust Risk Evaluator
+description: Deterministic, confidence-aware scoring for Trust and Risk Miner responses.
+entrypoint: scripts/evaluator-cli.ts
+transport: stdin_stdout_json
+dataset:
+  manifest: data/benchmark/v1/manifest.json
+deterministic: true
+network_access: false
+filesystem_access: false
+scoring:
+  range: [0, 1]
+  invalid_response_score: 0
+supported_intents:
+  - URL_SCAN
+  - AI_TEXT_DETECTION
+  - TEXT_AUTHENTICITY_CHECK
+  - CONTENT_VERIFICATION

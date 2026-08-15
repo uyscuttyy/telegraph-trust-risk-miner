@@ -1,0 +1,17 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { EvidenceTrustScoreEngine } from "../src/scoring/trust-score.js";
+import type { Evidence, SignalResult } from "../src/core/types.js";
+
+const engine = new EvidenceTrustScoreEngine();
+function signal(riskScore: number | null, confidence: number | null, status: SignalResult["status"] = "available", evidence: Evidence[] = []): SignalResult { return { intent: "URL_SCAN", status, riskScore, confidence, riskLevel: riskScore === null ? "unknown" : riskScore >= 60 ? "high" : riskScore >= 35 ? "medium" : "low", verdict: riskScore === null ? "unknown" : riskScore >= 60 ? "unsafe" : riskScore >= 35 ? "suspicious" : "likely_safe", evidence, limitations: [] }; }
+const riskyEvidence: Evidence = { id: "known-risk", kind: "provider", title: "Known malicious indicator", detail: "Matched a high-reliability source.", source: "fixture", status: "available", weight: 0.9, supportsRisk: true };
+const positiveEvidence: Evidence = { id: "valid-tls", kind: "provider", title: "Valid TLS", detail: "Certificate verified.", source: "fixture", status: "available", weight: 0.2, supportsRisk: false };
+
+test("completely safe signals produce a high trust score", () => { const result = engine.combine([signal(5, 0.9, "available", [positiveEvidence])]); assert.equal(result.trustScore, 95); assert.equal(result.riskScore, 5); });
+test("severe high-confidence evidence remains dominant", () => { const result = engine.combine([signal(90, 0.95, "available", [riskyEvidence]), signal(10, 0.8, "available", [positiveEvidence])]); assert.ok((result.riskScore ?? 0) >= 60); assert.ok((result.trustScore ?? 100) <= 40); });
+test("missing signals reduce confidence without implying safety", () => { const complete = engine.combine([signal(70, 0.8, "available", [riskyEvidence])]); const missing = engine.combine([signal(70, 0.8, "available", [riskyEvidence]), signal(null, null, "unavailable")]); assert.equal(missing.riskScore, complete.riskScore); assert.ok((missing.confidence ?? 1) < (complete.confidence ?? 0)); });
+test("contradictory signals reduce confidence", () => { const aligned = engine.combine([signal(80, 0.9, "available", [riskyEvidence]), signal(75, 0.9, "available", [riskyEvidence])]); const conflict = engine.combine([signal(80, 0.9, "available", [riskyEvidence]), signal(10, 0.9, "available", [positiveEvidence])]); assert.ok((conflict.confidence ?? 1) < (aligned.confidence ?? 0)); assert.ok(conflict.limitations.some(item => item.includes("disagreement"))); });
+test("low confidence recommends obtaining more evidence", () => { const result = engine.combine([signal(85, 0.2, "available", [riskyEvidence])]); assert.equal(result.recommendedAction, "obtain_more_evidence"); assert.equal(result.riskScore, 85); });
+test("contributors explain strongest risk and trust evidence", () => { const result = engine.combine([signal(60, 0.8, "available", [positiveEvidence, riskyEvidence])]); assert.equal(result.contributors[0].evidenceId, "known-risk"); assert.equal(result.contributors[0].direction, "risk"); });
+test("zero-weight evidence cannot produce non-finite scores", () => { const neutral: Evidence = { id: "neutral", kind: "heuristic", title: "Neutral", detail: "No scoring weight.", status: "available", weight: 0, supportsRisk: false }; const result = engine.combine([signal(20, 0.5, "available", [neutral])]); assert.ok(Number.isFinite(result.riskScore)); assert.ok(Number.isFinite(result.confidence)); });

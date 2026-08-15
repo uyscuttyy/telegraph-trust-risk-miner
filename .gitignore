@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+
+# Runtime output
+*.log
+logs/
+coverage/
+dist/
+build/
+.cache/
+.tmp/
+tmp/
+
+# Local benchmark downloads and generated ad hoc reports
+data/raw/
+data/downloads/
+reports/
+*.report.json
+*.result.json
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local deployment overrides
+docker-compose.override.yml
+miner.local.yaml
+*.local.yaml

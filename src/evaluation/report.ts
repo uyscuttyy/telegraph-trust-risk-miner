@@ -1,0 +1,7 @@
+import type { EvaluationReport } from "./types.js";
+
+export function reportToJson(report: EvaluationReport): string { return JSON.stringify(report, null, 2); }
+export function reportToMarkdown(report: EvaluationReport): string {
+  const pct = (value: number) => `${(value * 100).toFixed(2)}%`;
+  return `# Evaluation: ${report.datasetName}\n\nGenerated: ${report.generatedAt}\n\n## Classification\n\n- Evaluated: ${report.classification.evaluated}\n- Accuracy: ${pct(report.classification.accuracy)}\n- Precision: ${pct(report.classification.precision)}\n- Recall: ${pct(report.classification.recall)}\n- F1: ${pct(report.classification.f1)}\n\n## Calibration\n\n- Brier score: ${report.calibration.brierScore.toFixed(4)}\n- Expected calibration error: ${report.calibration.expectedCalibrationError.toFixed(4)}\n\n## Ranking\n\n- Evaluated pairs: ${report.ranking.evaluatedPairs}\n- Pairwise accuracy: ${pct(report.ranking.pairwiseAccuracy)}\n\n## Reliability\n\n- Coverage: ${pct(report.reliability.coverage)}\n- Failed: ${report.reliability.failed}\n- Unavailable: ${report.reliability.unavailable}\n- Mean latency: ${report.reliability.meanLatencyMs.toFixed(2)} ms\n- Structure failures: ${report.structureFailures}\n`;
+}

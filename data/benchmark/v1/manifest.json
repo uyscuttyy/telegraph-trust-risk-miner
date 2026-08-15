@@ -1,0 +1,67 @@
+{
+  "name": "telegraph-trust-risk-benchmark",
+  "version": "1.0.0",
+  "createdAt": "2026-08-14T00:00:00Z",
+  "sources": [
+    {
+      "id": "urlhaus",
+      "name": "URLhaus recent malware URLs",
+      "url": "https://urlhaus.abuse.ch/downloads/csv_recent/",
+      "retrievedAt": "2026-08-14T00:00:00Z",
+      "sha256": "35f1cedf2901c27a1ecda6813a98de0d0e7336dbe4914fe995ce4cecb0529257",
+      "license": "URLhaus Terms of Use",
+      "notes": "Reported malicious URLs; labels reflect source reporting."
+    },
+    {
+      "id": "tranco",
+      "name": "Tranco top domains",
+      "url": "https://tranco-list.eu/top-1m.csv.zip",
+      "retrievedAt": "2026-08-14T00:00:00Z",
+      "sha256": "3845e51320bc359af2a47d96c6730ac0c6523ab5b5b27895938c35f6f1062260",
+      "license": "Tranco License",
+      "notes": "Popularity list used only as lower-confidence benign hard negatives; popularity is not proof of safety."
+    },
+    {
+      "id": "hc3",
+      "name": "HC3",
+      "url": "https://huggingface.co/datasets/Hello-SimpleAI/HC3",
+      "retrievedAt": "2026-08-14T00:00:00Z",
+      "sha256": "181b5350673570bd0aa666e260aec33627da98177816423b048c712dcb272c60",
+      "license": "CC BY-NC 4.0",
+      "notes": "Human and ChatGPT answers; authorship labels follow dataset fields."
+    },
+    {
+      "id": "deceptive-opinion-spam",
+      "name": "Deceptive Opinion Spam Corpus",
+      "url": "https://myleott.com/op_spam_v1.4.zip",
+      "retrievedAt": "2026-08-14T00:00:00Z",
+      "sha256": "e3a61b3709ccaca842aeec7f525e273988cf3b1bab35151712cf89759a6724fa",
+      "license": "Corpus-provided license",
+      "notes": "Truthful and deceptive review corpus."
+    },
+    {
+      "id": "project-fixtures",
+      "name": "Project synthetic and adversarial fixtures",
+      "url": "repository:src/datasets",
+      "retrievedAt": "2026-08-14T00:00:00Z",
+      "sha256": "af62256e1cc991132360a5b032e4989b72900485727e45b175dab3fc0e7655fa",
+      "license": "Project source license",
+      "notes": "Clearly marked synthetic/adversarial development fixtures; never represented as real-world ground truth."
+    }
+  ],
+  "caseCount": 332,
+  "intents": [
+    "URL_SCAN",
+    "AI_TEXT_DETECTION",
+    "CONTENT_VERIFICATION"
+  ],
+  "splits": {
+    "development": 265,
+    "test": 67
+  },
+  "sourceTypes": {
+    "real": 300,
+    "synthetic": 32,
+    "adversarial": 0
+  }
+}
