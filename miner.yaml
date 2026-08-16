@@ -4,7 +4,7 @@ id: 0
 slug: telegraph-trust-risk
 protocol: generic
 name: Telegraph Trust Risk Intelligence
-description: Multi-signal trust and risk analysis for URLs, text authenticity, AI text detection, and content verification.
+description: Evidence-based, confidence-aware AI-generated text detection.
 base_url: https://replace-with-deployed-miner.example
 auth:
   type: none
@@ -13,6 +13,30 @@ endpoints:
     external_path: /v1/analyze
     method: POST
     description: Analyze one supported intent using a JSON request envelope.
+    intents:
+      AI_TEXT_DETECTION:
+        request_schema:
+          type: object
+          required: [intent, input]
+          properties:
+            requestId: { type: string }
+            intent: { type: string, const: AI_TEXT_DETECTION }
+            input:
+              type: object
+              required: [text]
+              properties:
+                text: { type: string, minLength: 1, maxLength: 131072 }
+              additionalProperties: false
+          additionalProperties: false
+        response_schema:
+          type: object
+          required: [requestId, intent, result]
+          properties:
+            requestId: { type: string }
+            intent: { type: string, const: AI_TEXT_DETECTION }
+            result:
+              type: object
+              required: [status, trustScore, riskScore, confidence, riskLevel, verdict, evidence, limitations, contributors]
 limitations:
   - code: MAX_BODY_SIZE
     message: Request bodies must not exceed 128 KiB.
@@ -25,7 +49,4 @@ semantics:
     label_field: result.verdict
     reason_field: result.evidence
   supported_intents:
-    - URL_SCAN
     - AI_TEXT_DETECTION
-    - TEXT_AUTHENTICITY_CHECK
-    - CONTENT_VERIFICATION

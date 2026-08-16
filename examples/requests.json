@@ -1,6 +1,3 @@
 [
-  { "requestId": "url-example", "intent": "URL_SCAN", "input": { "url": "https://example.com/login" } },
-  { "requestId": "ai-example", "intent": "AI_TEXT_DETECTION", "input": { "text": "This sample is long enough to permit a cautious stylistic assessment, while still requiring uncertainty about its actual author and origin." } },
-  { "requestId": "auth-example", "intent": "TEXT_AUTHENTICITY_CHECK", "input": { "text": "Signed project update", "claimedAuthor": "Project Team", "metadata": { "sourceVerified": false } } },
-  { "requestId": "content-example", "intent": "CONTENT_VERIFICATION", "input": { "content": "Urgent: verify your account and send payment immediately.", "metadata": { "verifiedPurchase": false, "accountAgeDays": 1, "reviewCount": 1 } } }
+  { "requestId": "ai-example", "intent": "AI_TEXT_DETECTION", "input": { "text": "This sample is long enough to permit a cautious stylistic assessment, while still requiring uncertainty about its actual author and origin." } }
 ]

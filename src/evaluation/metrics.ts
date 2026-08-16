@@ -11,11 +11,12 @@ export function classificationMetrics(items: readonly CaseResult[], threshold = 
 }
 
 export function calibrationMetrics(items: readonly CaseResult[], bins = 10): CalibrationMetrics {
-  const rows = labeled(items); if (!rows.length) return { evaluated: 0, brierScore: 0, expectedCalibrationError: 0 };
+  const rows = labeled(items); if (!rows.length) return { evaluated: 0, brierScore: 0, expectedCalibrationError: 0, confidenceBrierScore: 0 };
   const brierScore = rows.reduce((sum, item) => sum + (probability(item) - (item.groundTruth.label === "risky" ? 1 : 0)) ** 2, 0) / rows.length;
+  const confidenceBrierScore = rows.reduce((sum, item) => { const correct = ((item.prediction?.riskScore ?? 0) >= 50) === (item.groundTruth.label === "risky") ? 1 : 0; return sum + ((item.prediction?.confidence ?? 0) - correct) ** 2; }, 0) / rows.length;
   let ece = 0;
   for (let bin = 0; bin < bins; bin++) { const low = bin / bins, high = (bin + 1) / bins; const members = rows.filter(i => probability(i) >= low && (bin === bins - 1 ? probability(i) <= high : probability(i) < high)); if (!members.length) continue; const avgPrediction = members.reduce((s, i) => s + probability(i), 0) / members.length; const avgActual = members.filter(i => i.groundTruth.label === "risky").length / members.length; ece += members.length / rows.length * Math.abs(avgPrediction - avgActual); }
-  return { evaluated: rows.length, brierScore, expectedCalibrationError: ece };
+  return { evaluated: rows.length, brierScore, expectedCalibrationError: ece, confidenceBrierScore };
 }
 
 export function rankingMetrics(items: readonly CaseResult[]): RankingMetrics {
@@ -24,5 +25,10 @@ export function rankingMetrics(items: readonly CaseResult[]): RankingMetrics {
   return { evaluatedPairs: pairs, pairwiseAccuracy: ratio(correct, pairs) };
 }
 
-export function reliabilityMetrics(items: readonly CaseResult[]): ReliabilityMetrics { const completed = items.filter(i => i.prediction).length; const failed = items.filter(i => i.error).length; const unavailable = items.filter(i => i.prediction?.status === "unavailable").length; return { total: items.length, completed, failed, unavailable, coverage: ratio(completed - unavailable, items.length), meanLatencyMs: ratio(items.reduce((s, i) => s + i.latencyMs, 0), items.length) }; }
+export function reliabilityMetrics(items: readonly CaseResult[]): ReliabilityMetrics {
+  const completed = items.filter(i => i.prediction).length; const failed = items.filter(i => i.error).length; const unavailable = items.filter(i => i.prediction?.status === "unavailable").length;
+  const latencies = items.map(item => item.latencyMs).sort((a, b) => a - b);
+  return { total: items.length, completed, failed, unavailable, coverage: ratio(completed - unavailable, items.length), meanLatencyMs: ratio(latencies.reduce((sum, value) => sum + value, 0), latencies.length), p50LatencyMs: percentile(latencies, .5), p95LatencyMs: percentile(latencies, .95) };
+}
+function percentile(sorted: readonly number[], quantile: number): number { if (!sorted.length) return 0; return sorted[Math.min(sorted.length - 1, Math.ceil(sorted.length * quantile) - 1)]; }
 function ratio(numerator: number, denominator: number): number { return denominator ? numerator / denominator : 0; }

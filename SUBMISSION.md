@@ -14,23 +14,20 @@ Track 1: Miner. The project also contains a separate Track 2 evaluator package u
 
 The public HTTPS base URL must replace the placeholder in `miner.yaml` before submission.
 
-## Supported Intents
+## Registered Intent
 
 | Intent | Input | Implementation | Important limitation |
 |---|---|---|---|
-| `URL_SCAN` | `url`, optional `metadata` | URL parsing, encoding, hostname, IP-host, punycode and suspicious structure signals | Network reputation and domain-registration data may be unavailable |
-| `AI_TEXT_DETECTION` | `text`, optional `metadata` | Probabilistic stylistic heuristics | Cannot establish authorship or prove AI origin |
-| `TEXT_AUTHENTICITY_CHECK` | `text`, optional `claimedAuthor`, optional provenance metadata | Conservative provenance assessment | Caller-supplied provenance is not independently verified |
-| `CONTENT_VERIFICATION` | `content`, optional `claim`, `sourceUrl`, `metadata` | Phishing/scam, review and identity-consistency signals | Risk indicators do not prove fraud or factual falsity |
+| `AI_TEXT_DETECTION` | `text` | Probabilistic stylistic heuristics with explicit evidence and uncertainty | Cannot establish authorship or prove AI origin |
 
 ## Request Contract
 
 ```json
 {
   "requestId": "optional-client-id",
-  "intent": "URL_SCAN",
+  "intent": "AI_TEXT_DETECTION",
   "input": {
-    "url": "https://example.com"
+    "text": "Text to assess"
   }
 }
 ```
@@ -42,7 +39,7 @@ See `examples/requests.json` for one valid request per intent.
 ```json
 {
   "requestId": "optional-client-id",
-  "intent": "URL_SCAN",
+  "intent": "AI_TEXT_DETECTION",
   "result": {
     "status": "available",
     "trustScore": 90,
@@ -101,5 +98,5 @@ The core detectors operate without required paid APIs. The URL engine defines re
 
 - Heuristic outputs are probabilistic and may produce false positives or false negatives.
 - The Miner does not prove fraud, identity, or authorship.
-- Some URL intelligence requires external providers not configured by default.
+- The submitted AI detector is a deterministic heuristic model and can miss edited or atypical AI text.
 - Live ranking and latency claims require a public deployment and Telegraph traffic.

@@ -1,20 +1,19 @@
 # Telegraph Trust Risk Miner
 
-`telegraph-trust-risk-miner` is a TypeScript Miner for the Telegraph Hackathon. It provides structured trust and risk intelligence with separate risk and confidence values, evidence, limitations, and explicit unavailable states.
+`telegraph-trust-risk-miner` is a TypeScript Miner for the Telegraph Hackathon. The submission profile focuses on evidence-based AI text detection with separate risk and confidence values, limitations, and explicit uncertainty.
 
 ## Supported Intents
 
-- `URL_SCAN`
 - `AI_TEXT_DETECTION`
-- `TEXT_AUTHENTICITY_CHECK`
-- `CONTENT_VERIFICATION`
+
+URL and other trust/risk detectors remain experimental repository components and are not advertised or registered because their current benchmark quality is not competitive enough.
 
 ## Current Status
 
 The repository contains:
 
 - A generic Telegraph-style HTTP Miner
-- URL, phishing/scam, AI-text, review/identity, and provenance detectors
+- A registered AI-text detector plus experimental trust/risk detectors
 - A versioned benchmark dataset with source provenance and hashes
 - A deterministic evaluator kernel and stdin/stdout evaluator adapter
 - Docker deployment packaging
@@ -51,7 +50,7 @@ curl http://localhost:8080/healthz
 ```bash
 curl -X POST http://localhost:8080/v1/analyze \
   -H 'content-type: application/json' \
-  -d '{"intent":"URL_SCAN","input":{"url":"https://example.com/login"}}'
+  -d '{"intent":"AI_TEXT_DETECTION","input":{"text":"In conclusion, it is important to note that this sample uses highly regular explanatory prose."}}'
 ```
 
 All supported request examples are in [examples/requests.json](examples/requests.json). The complete API contract is in [SUBMISSION.md](SUBMISSION.md).
@@ -107,9 +106,8 @@ The gate intentionally fails while the public URL remains a placeholder.
 
 - Heuristic detectors can produce false positives and false negatives.
 - AI-text detection cannot prove authorship or AI origin.
-- Text authenticity cannot prove identity without verifiable provenance.
-- Content-risk indicators do not establish fraud or factual falsity.
-- External reputation and registration providers are optional and not configured by default.
+- The submitted detector is local and deterministic; it does not use an external classifier.
+- Experimental URL, provenance, and content-risk components are not part of the registration profile.
 - No live Telegraph ranking or latency claims are made before deployment.
 
 ## Project Documents

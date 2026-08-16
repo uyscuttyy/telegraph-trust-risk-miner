@@ -7,6 +7,7 @@ export interface WasmEvaluationInput { expected: EvaluationCase; response: unkno
 export interface WasmEvaluationOutput { score: number; valid: boolean; structureFailures: string[]; components: { classification: number; calibration: number; rankingSignal: number; evidence: number; confidence: number }; }
 
 export function evaluateResponse(input: WasmEvaluationInput): WasmEvaluationOutput {
+  if (input.expected.intent !== "AI_TEXT_DETECTION") return invalid(["intent is not supported by this evaluator"]);
   const failures = validateResultStructure(input.response);
   if (failures.length || !input.response || typeof input.response !== "object") return invalid(failures);
   const result = input.response as TrustRiskResult;

@@ -5,7 +5,7 @@ import { parseRequest, toAnalysisInput, validateAnalysisInput } from "../src/min
 
 test("submission examples match the implemented request contract", () => {
   const requests = JSON.parse(fs.readFileSync("examples/requests.json", "utf8"));
-  assert.equal(requests.length, 4);
+  assert.equal(requests.length, 1);
   for (const request of requests) validateAnalysisInput(toAnalysisInput(parseRequest(request)));
-  assert.equal(new Set(requests.map((request: any) => request.intent)).size, 4);
+  assert.deepEqual(requests.map((request: any) => request.intent), ["AI_TEXT_DETECTION"]);
 });

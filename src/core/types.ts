@@ -1,6 +1,8 @@
 export const SUPPORTED_INTENTS = [
   "URL_SCAN", "AI_TEXT_DETECTION", "TEXT_AUTHENTICITY_CHECK", "CONTENT_VERIFICATION",
 ] as const;
+export const REGISTERED_INTENTS = ["AI_TEXT_DETECTION"] as const;
+export type RegisteredIntent = typeof REGISTERED_INTENTS[number];
 export type SupportedIntent = typeof SUPPORTED_INTENTS[number];
 export type RiskLevel = "minimal" | "low" | "medium" | "high" | "critical" | "unknown";
 export type Verdict = "safe" | "likely_safe" | "suspicious" | "unsafe" | "authentic" | "inauthentic" | "uncertain" | "unknown";

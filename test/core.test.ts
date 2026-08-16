@@ -1,10 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { SUPPORTED_INTENTS, validateInput, validateSignal, assertUnitInterval, assertRiskScore } from "../src/core/types.js";
+import { REGISTERED_INTENTS, SUPPORTED_INTENTS, validateInput, validateSignal, assertUnitInterval, assertRiskScore } from "../src/core/types.js";
 import { unavailableError } from "../src/core/errors.js";
 
 test("supports exactly the four approved intents", () => {
   assert.deepEqual(SUPPORTED_INTENTS, ["URL_SCAN", "AI_TEXT_DETECTION", "TEXT_AUTHENTICITY_CHECK", "CONTENT_VERIFICATION"]);
+  assert.deepEqual(REGISTERED_INTENTS, ["AI_TEXT_DETECTION"]);
 });
 test("validates confidence and risk ranges", () => {
   assert.doesNotThrow(() => { assertUnitInterval(0, "confidence"); assertUnitInterval(1, "confidence"); assertRiskScore(100); });
