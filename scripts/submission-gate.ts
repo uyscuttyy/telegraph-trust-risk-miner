@@ -7,7 +7,7 @@ const evaluator = read("evaluator.yaml");
 if (/replace-with-deployed|localhost|127\.0\.0\.1/.test(yaml)) failures.push("miner.yaml base_url is not a public deployment URL");
 for (const intent of ["AI_TEXT_DETECTION"]) if (!yaml.includes(`- ${intent}`) || !evaluator.includes(`- ${intent}`)) failures.push(`intent declaration missing: ${intent}`);
 for (const intent of ["URL_SCAN", "TEXT_AUTHENTICITY_CHECK", "CONTENT_VERIFICATION", "FRAUD_DETECTION", "PHISHING_DETECTION"]) if (yaml.includes(`    - ${intent}`) || evaluator.includes(`  - ${intent}`)) failures.push(`non-submission intent declared: ${intent}`);
-if (!yaml.includes("request_schema:") || !yaml.includes("response_schema:")) failures.push("intent-specific request/response schema is missing");
+if (!yaml.includes("input_schema:") || !yaml.includes("output_schema:")) failures.push("top-level input/output schema is missing");
 for (const file of ["SUBMISSION.md", "EVALUATOR.md", "REGISTRATION.md", "Dockerfile", ".dockerignore", "examples/requests.json", "data/benchmark/v1/manifest.json"]) if (!fs.existsSync(file)) failures.push(`required submission artifact missing: ${file}`);
 for (const file of walk(".")) {
   if (file.includes("node_modules") || file.includes(".git") || file.startsWith("./data/benchmark/v1/cases")) continue;

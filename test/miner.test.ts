@@ -13,5 +13,5 @@ test("miner YAML declares only approved intents and an HTTPS deployment placehol
   assert.match(yaml, /base_url: https:\/\//);
   assert.match(yaml, /    - AI_TEXT_DETECTION/);
   for (const intent of ["URL_SCAN", "TEXT_AUTHENTICITY_CHECK", "CONTENT_VERIFICATION", "FRAUD_DETECTION", "PHISHING_DETECTION"]) assert.doesNotMatch(yaml, new RegExp(`    - ${intent}`));
-  assert.match(yaml, /request_schema:/); assert.match(yaml, /response_schema:/);
+  assert.match(yaml, /^input_schema:/m); assert.match(yaml, /^output_schema:/m);
 });

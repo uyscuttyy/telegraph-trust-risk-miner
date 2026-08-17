@@ -5,44 +5,93 @@ slug: telegraph-trust-risk
 protocol: generic
 name: Telegraph Trust Risk Intelligence
 description: Evidence-based, confidence-aware AI-generated text detection.
+
 base_url: https://telegraph-trust-risk-miner.onrender.com
+
 auth:
   type: none
+
 endpoints:
   - path: /v1/analyze
     external_path: /v1/analyze
     method: POST
-    description: Analyze one supported intent using a JSON request envelope.
-    intents:
-      AI_TEXT_DETECTION:
-        request_schema:
-          type: object
-          required: [intent, input]
-          properties:
-            requestId: { type: string }
-            intent: { type: string, const: AI_TEXT_DETECTION }
-            input:
-              type: object
-              required: [text]
-              properties:
-                text: { type: string, minLength: 1, maxLength: 131072 }
-              additionalProperties: false
-          additionalProperties: false
-        response_schema:
-          type: object
-          required: [requestId, intent, result]
-          properties:
-            requestId: { type: string }
-            intent: { type: string, const: AI_TEXT_DETECTION }
-            result:
-              type: object
-              required: [status, trustScore, riskScore, confidence, riskLevel, verdict, evidence, limitations, contributors]
+    content_type: application/json
+    description: Analyze text for probabilistic AI-generation indicators.
+
+input_schema:
+  type: object
+  required:
+    - intent
+    - input
+  properties:
+    intent:
+      type: string
+      enum:
+        - AI_TEXT_DETECTION
+    input:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          minLength: 25
+          description: Text to analyze for AI-generation indicators.
+      additionalProperties: false
+  additionalProperties: false
+
+output_schema:
+  type: object
+  required:
+    - requestId
+    - intent
+    - result
+  properties:
+    requestId:
+      type: string
+    intent:
+      type: string
+    result:
+      type: object
+      required:
+        - status
+        - trustScore
+        - riskScore
+        - confidence
+        - riskLevel
+        - verdict
+        - evidence
+        - limitations
+        - contributors
+      properties:
+        status:
+          type: string
+        trustScore:
+          type: number
+        riskScore:
+          type: number
+        confidence:
+          type: number
+        riskLevel:
+          type: string
+        verdict:
+          type: string
+        evidence:
+          type: array
+        limitations:
+          type: array
+        contributors:
+          type: array
+        recommendedAction:
+          type: string
+
 limitations:
   - code: MAX_BODY_SIZE
     message: Request bodies must not exceed 128 KiB.
     property: size_bytes
     value_bytes: 131072
     operator: lte
+
 semantics:
   signal_mapping:
     confidence_field: result.confidence
