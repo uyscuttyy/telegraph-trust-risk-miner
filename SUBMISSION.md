@@ -12,7 +12,7 @@ Track 1: Miner. The project also contains a separate Track 2 evaluator package u
 - Maximum request body: 128 KiB
 - Authentication: none at the Miner HTTP layer
 
-The public HTTPS base URL must replace the placeholder in `miner.yaml` before submission.
+The public HTTPS base URL is configured in `miner.yaml` as `https://telegraph-trust-risk-miner.onrender.com`.
 
 ## Registered Intent
 

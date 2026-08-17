@@ -12,5 +12,4 @@ Phase 0 repository and official-intent audit is complete. No application code ha
 
 ## Next task
 
-Implement only the high-impact fixes from `AUDIT.md`, beginning with intent-scope and metadata alignment, then evaluator and reproducibility improvements.
-
+Deployment URL is configured and verified. Run the corrected live probe, then complete Telegraph integration-platform registration and Track 2 WASM packaging when the official ABI is available.

@@ -21,7 +21,7 @@ The repository contains:
 - A local submission gate
 - Public progress and submission documentation
 
-The Miner is not publicly deployed yet. `miner.yaml` still contains a deployment URL placeholder, and the final Telegraph WASM wrapper must be aligned with the official Track 2 ABI when released.
+The Miner is deployed at `https://telegraph-trust-risk-miner.onrender.com`. The final Telegraph WASM wrapper must still be aligned with the official Track 2 ABI when released.
 
 ## Quick Start
 

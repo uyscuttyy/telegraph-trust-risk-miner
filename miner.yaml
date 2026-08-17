@@ -5,7 +5,7 @@ slug: telegraph-trust-risk
 protocol: generic
 name: Telegraph Trust Risk Intelligence
 description: Evidence-based, confidence-aware AI-generated text detection.
-base_url: https://replace-with-deployed-miner.example
+base_url: https://telegraph-trust-risk-miner.onrender.com
 auth:
   type: none
 endpoints:
